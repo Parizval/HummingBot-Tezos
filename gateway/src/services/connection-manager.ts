@@ -6,6 +6,7 @@ import { Polygon } from '../chains/polygon/polygon';
 import { Uniswap } from '../connectors/uniswap/uniswap';
 import { UniswapLP } from '../connectors/uniswap/uniswap.lp';
 import { Pangolin } from '../connectors/pangolin/pangolin';
+import { Tezos } from '../chains/tezos/tezos';
 import { Openocean } from '../connectors/openocean/openocean';
 import { Serum } from '../connectors/serum/serum';
 import { Quickswap } from '../connectors/quickswap/quickswap';
@@ -22,12 +23,14 @@ import { Defikingdoms } from '../connectors/defikingdoms/defikingdoms';
 import { Defira } from '../connectors/defira/defira';
 import { Serumish } from '../connectors/serum/serum';
 
-export type ChainUnion = Ethereumish | Solanaish;
+export type ChainUnion = Ethereumish | Solanaish | Tezos;
 
 export type Chain<T> = T extends Ethereumish
   ? Ethereumish
   : T extends Solanaish
   ? Solanaish
+  : T extends Tezos
+  ? Tezos
   : never;
 
 export async function getChain<T>(
@@ -41,6 +44,7 @@ export async function getChain<T>(
     chainInstance = Avalanche.getInstance(network);
   else if (chain === 'polygon') chainInstance = Polygon.getInstance(network);
   else if (chain === 'harmony') chainInstance = Harmony.getInstance(network);
+  else if (chain === 'tezos') chainInstance = Tezos.getInstance(network);
   else if (chain === 'solana')
     chainInstance = await Solana.getInstance(network);
   else throw new Error('unsupported chain');

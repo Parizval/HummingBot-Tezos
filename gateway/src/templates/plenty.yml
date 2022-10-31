@@ -1,0 +1,11 @@
+# allowedSlippage: how much the execution price is allowed to move unfavorably from the trade
+# execution price. It uses a rational number for precision.
+allowedSlippage: '1/100'
+# ttl: how long a trade is valid in seconds. After this time passes plenty will not
+# perform the trade, but the gas will still be sent.
+ttl: 400
+contractAddresses:
+  mainnet:
+      routerAddress: ''
+  ghostnet:
+      routerAddress: ''

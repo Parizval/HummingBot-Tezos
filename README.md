@@ -91,7 +91,7 @@ Help us **democratize high-frequency trading** and make powerful trading algorit
 - [Docs](https://hummingbot.org/docs)
 - [FAQs](https://hummingbot.org/faq/)
 - [Installation](https://hummingbot.org/installation/)
-- [Developers](https://hummingbot.org/developers/)
+- [Developers](https://hummingbot.org/developxers/)
 
 ### Community
 

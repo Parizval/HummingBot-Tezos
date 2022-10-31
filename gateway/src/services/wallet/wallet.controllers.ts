@@ -4,7 +4,7 @@ import { Ethereum } from '../../chains/ethereum/ethereum';
 import { Polygon } from '../../chains/polygon/polygon';
 import { Solana } from '../../chains/solana/solana';
 import { Harmony } from '../../chains/harmony/harmony';
-
+import { Tezos } from '../../chains/tezos/tezos';
 import {
   AddWalletRequest,
   AddWalletResponse,
@@ -50,6 +50,13 @@ export async function addWallet(
     const polygon = Polygon.getInstance(req.network);
     address = polygon.getWalletFromPrivateKey(req.privateKey).address;
     encryptedPrivateKey = await polygon.encrypt(req.privateKey, passphrase);
+  } else if (req.chain === 'tezos') {
+    const tezos = Tezos.getInstance(req.network);
+    const tezosWallet = await tezos.getWalletFromPrivateKey(req.privateKey);
+    address = await tezosWallet.signer.publicKeyHash();
+    encryptedPrivateKey = JSON.stringify(
+      await tezos.encrypt(req.privateKey, passphrase)
+    );
   } else if (req.chain === 'solana') {
     const solana = await Solana.getInstance(req.network);
     address = solana

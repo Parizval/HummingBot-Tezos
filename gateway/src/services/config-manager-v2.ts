@@ -411,6 +411,8 @@ export class ConfigManagerV2 {
     // Extract the namespace ids.
     const namespaceMap: ConfigurationNamespaceDefinitions = {};
     for (const namespaceKey of Object.keys(configRoot.configurations)) {
+      console.log(namespaceKey);
+
       namespaceMap[namespaceKey.slice(NamespaceTag.length)] =
         configRoot.configurations[namespaceKey];
     }

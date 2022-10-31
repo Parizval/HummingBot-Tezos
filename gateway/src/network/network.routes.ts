@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { NextFunction, Request, Response, Router } from 'express';
 import * as ethereumControllers from '../chains/ethereum/ethereum.controllers';
+import { Tezos } from '../chains/tezos/tezos';
+import { balances as tezosBalances } from '../chains/tezos/tezos.controllers';
 import { Solanaish } from '../chains/solana/solana';
 import * as solanaControllers from '../chains/solana/solana.controllers';
 import { Ethereumish } from '../services/common-interfaces';
@@ -85,9 +87,11 @@ export namespace NetworkRoutes {
                 req.body
               )) as BalanceResponse
             );
+        } else if (req.body.chain === 'tezos') {
+          const chain = await getChain<Tezos>(req.body.chain, req.body.network);
+          res.status(200).json(await tezosBalances(chain as Tezos, req.body));
         } else {
           validateEthereumBalanceRequest(req.body);
-
           const chain = await getChain<Ethereumish>(
             req.body.chain,
             req.body.network

@@ -9,6 +9,7 @@ import { Avalanche } from '../chains/avalanche/avalanche';
 import { Ethereum } from '../chains/ethereum/ethereum';
 import { Harmony } from '../chains/harmony/harmony';
 import { Polygon } from '../chains/polygon/polygon';
+import { Tezos } from '../chains/tezos/tezos';
 import { TokenInfo } from '../services/ethereum-base';
 import {
   HttpException,
@@ -16,6 +17,8 @@ import {
   UNKNOWN_KNOWN_CHAIN_ERROR_MESSAGE,
 } from '../services/error-handler';
 import { EthereumBase } from '../services/ethereum-base';
+
+import { logger } from '../services/logger';
 
 export async function getStatus(
   req: StatusRequest
@@ -28,6 +31,8 @@ export async function getStatus(
   let currentBlockNumber: number | undefined;
   let nativeCurrency: string;
 
+  logger.info(req.network);
+
   if (req.chain) {
     if (req.chain === 'avalanche') {
       connections.push(Avalanche.getInstance(req.network as string));
@@ -37,6 +42,9 @@ export async function getStatus(
       connections.push(Ethereum.getInstance(req.network as string));
     } else if (req.chain === 'polygon') {
       connections.push(Polygon.getInstance(req.network as string));
+    } else if (req.chain === 'tezos') {
+      logger.info(`Check Code:${Tezos.getInstance(req.network as string)}`);
+      connections.push(Tezos.getInstance(req.network as string));
     } else if (req.chain === 'solana') {
       connections.push(await Solana.getInstance(req.network as string));
     } else {
@@ -65,6 +73,11 @@ export async function getStatus(
     const polygonConnections = Polygon.getConnectedInstances();
     connections = connections.concat(
       polygonConnections ? Object.values(polygonConnections) : []
+    );
+
+    const tezosConnections = Tezos.getConnectedInstances();
+    connections = connections.concat(
+      tezosConnections ? Object.values(tezosConnections) : []
     );
 
     const solanaConnections = Solana.getConnectedInstances();
@@ -101,7 +114,7 @@ export async function getStatus(
 }
 
 export async function getTokens(req: TokensRequest): Promise<TokensResponse> {
-  let connection: EthereumBase | Solanaish;
+  let connection: EthereumBase | Solanaish | Tezos;
   let tokens: TokenInfo[] = [];
 
   if (req.chain && req.network) {
@@ -113,6 +126,8 @@ export async function getTokens(req: TokensRequest): Promise<TokensResponse> {
       connection = Ethereum.getInstance(req.network);
     } else if (req.chain === 'polygon') {
       connection = Polygon.getInstance(req.network);
+    } else if (req.chain === 'tezos') {
+      connection = Tezos.getInstance(req.network);
     } else if (req.chain === 'solana') {
       connection = await Solana.getInstance(req.network);
     } else {
